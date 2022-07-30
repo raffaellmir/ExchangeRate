@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.raffaellmir.exchangerate.databinding.FragmentPopularBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PopularFragment : Fragment() {
     private var _binding: FragmentPopularBinding? = null
     private val binding get() = _binding!!
