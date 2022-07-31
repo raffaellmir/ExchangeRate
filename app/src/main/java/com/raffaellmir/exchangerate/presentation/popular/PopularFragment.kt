@@ -37,7 +37,7 @@ class PopularFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 currencyApiRepository.getExchangeRateBasedOn("USD").collect { response ->
-                    binding.textView2.text = response?.success?.toString()
+                    binding.textView2.text = response?.rates?.get("RUB").toString()
                 }
             }
         }
