@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import com.raffaellmir.exchangerate.data.network.api.CurrencyApiRepository
 import com.raffaellmir.exchangerate.databinding.FragmentPopularBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +22,7 @@ class PopularFragment : Fragment() {
     private val binding get() = _binding!!
 
     @Inject lateinit var currencyApiRepository: CurrencyApiRepository
+    private var currencyRatesAdapter: PopularRatesAdapter? = PopularRatesAdapter(emptyList())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,19 +36,29 @@ class PopularFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                currencyApiRepository.getExchangeRateBasedOn("USD").collect { response ->
-                    binding.textView2.text = response?.rates?.get("RUB").toString()
-                }
-            }
-        }
-
+        setupCurrencyRatesAdapter()
+        initObservers()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        currencyRatesAdapter = null
         _binding = null
+    }
+
+    private fun initObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                currencyApiRepository.getExchangeRateBasedOn("USD").collect { response ->
+                    binding.tvCurrency.text = response.rates["RUB"].toString()
+                }
+            }
+        }
+    }
+
+    private fun setupCurrencyRatesAdapter() = with(binding.rvPopularCurrency) {
+        layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL, false)
+        adapter = currencyRatesAdapter
     }
 }

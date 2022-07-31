@@ -1,7 +1,5 @@
 package com.raffaellmir.exchangerate.data.network.models.response
 
-import com.google.gson.annotations.SerializedName
-
 data class ExchangeRatesResponse(
     val base: String,
     val date: String,

@@ -10,6 +10,6 @@ class CurrencyApiRepository @Inject constructor(
         val response = currencyService.getExchangeRateBasedOn(base = base)
 
         if (response.isSuccessful)
-            emit(response.body())
+            emit(response.body()!!)
     }
 }
