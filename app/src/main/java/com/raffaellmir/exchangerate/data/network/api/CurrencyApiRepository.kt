@@ -3,7 +3,7 @@ package com.raffaellmir.exchangerate.data.network.api
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class CurrencyApiRepo @Inject constructor(
+class CurrencyApiRepository @Inject constructor(
     private val currencyService: CurrencyService
 ) {
     suspend fun getExchangeRateBasedOn(base: String) = flow {
