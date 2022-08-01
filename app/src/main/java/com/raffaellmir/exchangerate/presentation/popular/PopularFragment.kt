@@ -4,30 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
-import com.raffaellmir.exchangerate.data.network.api.CurrencyApiRepository
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.raffaellmir.exchangerate.databinding.FragmentPopularBinding
+import com.raffaellmir.exchangerate.presentation.MainViewModel
+import com.raffaellmir.exchangerate.presentation.helpers.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class PopularFragment : Fragment() {
+class PopularFragment : BaseFragment() {
     private var _binding: FragmentPopularBinding? = null
     private val binding get() = _binding!!
 
-    @Inject lateinit var currencyApiRepository: CurrencyApiRepository
-    private var currencyRatesAdapter: PopularRatesAdapter? = PopularRatesAdapter(emptyList())
+    private val viewModel: MainViewModel by viewModels()
+
+    private lateinit var currencyAdapter: PopularCurrencyAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPopularBinding.inflate(inflater, container, false)
         return binding.root
@@ -36,29 +31,30 @@ class PopularFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupCurrencyRatesAdapter()
+        configureViews()
         initObservers()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        currencyRatesAdapter = null
         _binding = null
     }
 
-    private fun initObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+    private fun configureViews() {
+        setupCurrencyAdapter()
+    }
 
-                currencyApiRepository.getExchangeRateBasedOn("USD").collect { response ->
-                    binding.tvCurrency.text = response.rates["RUB"].toString()
-                }
+    private fun initObservers() {
+        launchFlow {
+            viewModel.currencyList.collect {
+                currencyAdapter.submitList(it)
             }
         }
     }
 
-    private fun setupCurrencyRatesAdapter() = with(binding.rvPopularCurrency) {
-        layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL, false)
-        adapter = currencyRatesAdapter
+    private fun setupCurrencyAdapter() = with(binding.rvPopularCurrency) {
+        currencyAdapter = PopularCurrencyAdapter()
+        layoutManager = LinearLayoutManager(requireContext(), VERTICAL, false)
+        adapter = currencyAdapter
     }
 }
