@@ -19,7 +19,7 @@ class PopularFragment : BaseFragment() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private lateinit var currencyAdapter: PopularCurrencyAdapter
+    private val currencyAdapter = PopularCurrencyAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,14 +46,13 @@ class PopularFragment : BaseFragment() {
 
     private fun initObservers() {
         launchFlow {
-            viewModel.currencyList.collect {
-                currencyAdapter.submitList(it)
+            viewModel.popState.collect {
+                currencyAdapter.submitList(it.currencyList)
             }
         }
     }
 
     private fun setupCurrencyAdapter() = with(binding.rvPopularCurrency) {
-        currencyAdapter = PopularCurrencyAdapter()
         layoutManager = LinearLayoutManager(requireContext(), VERTICAL, false)
         adapter = currencyAdapter
     }
