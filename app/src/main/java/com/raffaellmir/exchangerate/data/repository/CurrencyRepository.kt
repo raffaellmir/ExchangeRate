@@ -3,7 +3,7 @@ package com.raffaellmir.exchangerate.data.repository
 import com.raffaellmir.exchangerate.data.local.CurrencyDao
 import com.raffaellmir.exchangerate.data.local.CurrencyEntity
 import com.raffaellmir.exchangerate.data.local.toCurrency
-import com.raffaellmir.exchangerate.data.network.api.CurrencyService
+import com.raffaellmir.exchangerate.data.remote.api.CurrencyService
 import com.raffaellmir.exchangerate.util.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow

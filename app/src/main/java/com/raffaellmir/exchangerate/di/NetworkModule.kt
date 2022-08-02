@@ -1,7 +1,7 @@
 package com.raffaellmir.exchangerate.di
 
 import com.raffaellmir.exchangerate.Constants.CURRENCY_URL
-import com.raffaellmir.exchangerate.data.network.api.CurrencyService
+import com.raffaellmir.exchangerate.data.remote.api.CurrencyService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
