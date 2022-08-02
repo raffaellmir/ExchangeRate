@@ -1,4 +1,4 @@
-package com.raffaellmir.exchangerate.data.database
+package com.raffaellmir.exchangerate.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

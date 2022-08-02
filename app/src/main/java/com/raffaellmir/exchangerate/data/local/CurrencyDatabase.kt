@@ -1,4 +1,4 @@
-package com.raffaellmir.exchangerate.data.database
+package com.raffaellmir.exchangerate.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
