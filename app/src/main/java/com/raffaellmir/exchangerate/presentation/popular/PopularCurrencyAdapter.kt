@@ -6,19 +6,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.raffaellmir.exchangerate.databinding.CurrencyItemBinding
-import com.raffaellmir.exchangerate.domain.model.CurrencyItem
+import com.raffaellmir.exchangerate.domain.model.Currency
 
-class PopularCurrencyAdapter(private val onFavoriteButtonClick: (CurrencyItem) -> Unit) :
-    ListAdapter<CurrencyItem, PopularCurrencyAdapter.CurrencyHolder>(ItemDiffCallback) {
+class PopularCurrencyAdapter(private val onFavoriteButtonClick: (Currency) -> Unit) :
+    ListAdapter<Currency, PopularCurrencyAdapter.CurrencyHolder>(ItemDiffCallback) {
 
     inner class CurrencyHolder(
         private val binding: CurrencyItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(currency: CurrencyItem) = with(binding) {
+        fun bind(currency: Currency) = with(binding) {
             tvCurrencyTitle.text = currency.symbol
             tvCurrencyValue.text = currency.value.toString()
 
-            cbIsFavorite.isChecked = currency.isFavorite
+            cbIsFavorite.isChecked = currency.favorite
             cbIsFavorite.setOnClickListener { onFavoriteButtonClick(currency) }
         }
     }
@@ -31,10 +31,10 @@ class PopularCurrencyAdapter(private val onFavoriteButtonClick: (CurrencyItem) -
         holder.bind(getItem(position))
 
     private companion object {
-        object ItemDiffCallback : DiffUtil.ItemCallback<CurrencyItem>() {
-            override fun areItemsTheSame(oldItem: CurrencyItem, newItem: CurrencyItem): Boolean =
+        object ItemDiffCallback : DiffUtil.ItemCallback<Currency>() {
+            override fun areItemsTheSame(oldItem: Currency, newItem: Currency): Boolean =
                 oldItem.symbol == newItem.symbol
-            override fun areContentsTheSame(oldItem: CurrencyItem, newItem: CurrencyItem): Boolean =
+            override fun areContentsTheSame(oldItem: Currency, newItem: Currency): Boolean =
                 oldItem == newItem
         }
     }

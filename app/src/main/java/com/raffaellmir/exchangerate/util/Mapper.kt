@@ -1,12 +1,12 @@
 package com.raffaellmir.exchangerate.util
 
 import com.raffaellmir.exchangerate.data.local.CurrencyEntity
-import com.raffaellmir.exchangerate.domain.model.CurrencyItem
+import com.raffaellmir.exchangerate.domain.model.Currency
 
 fun CurrencyEntity.toCurrency() =
-    CurrencyItem(symbol = this.symbol, value = this.value, isFavorite = this.isFavorite)
+    Currency(symbol = this.symbol, value = this.value, favorite = this.favorite)
 
-fun CurrencyItem.toCurrencyEntity() =
-    CurrencyEntity(symbol = this.symbol, value = this.value, isFavorite = this.isFavorite)
+fun Currency.toCurrencyEntity() =
+    CurrencyEntity(symbol = this.symbol, value = this.value, favorite = this.favorite)
 
 fun Boolean.toInt() = if (this) 1 else 0

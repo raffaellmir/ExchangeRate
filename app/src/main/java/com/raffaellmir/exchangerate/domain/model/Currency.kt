@@ -1,7 +1,7 @@
 package com.raffaellmir.exchangerate.domain.model
 
-data class CurrencyItem(
+data class Currency(
     val symbol: String,
     val value: Double,
-    val isFavorite: Boolean,
+    val favorite: Boolean,
 )

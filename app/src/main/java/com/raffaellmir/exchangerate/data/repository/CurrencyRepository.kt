@@ -3,12 +3,11 @@ package com.raffaellmir.exchangerate.data.repository
 import com.raffaellmir.exchangerate.data.local.CurrencyDao
 import com.raffaellmir.exchangerate.data.local.CurrencyEntity
 import com.raffaellmir.exchangerate.data.remote.api.CurrencyService
-import com.raffaellmir.exchangerate.domain.model.CurrencyItem
+import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
@@ -29,7 +28,7 @@ class CurrencyRepository @Inject constructor(
             currencyDao.deleteCurrencies(response.body()!!.rates.map { it.key })
             currencyDao.insertCurrencyList(response.body()!!.rates.map {
                 CurrencyEntity(symbol = it.key, value = it.value,
-                    isFavorite = currencyDao.getCurrencyBySymbol(it.key)?.isFavorite ?: false) })
+                    favorite = currencyDao.getCurrencyBySymbol(it.key)?.favorite ?: false) })
 
         } catch (e: IOException) {
             emit(Event.Error(
@@ -38,8 +37,7 @@ class CurrencyRepository @Inject constructor(
             ))
         }
 
-        val newCurrencyList =
-            currencyDao.getAllCurrency().map { it.toCurrency() }
+        val newCurrencyList = currencyDao.getAllCurrency().map { it.toCurrency() }
         emit(Event.Success(newCurrencyList))
     }.flowOn(Dispatchers.IO)
 
@@ -48,11 +46,9 @@ class CurrencyRepository @Inject constructor(
     suspend fun getSortedCurrencyList(sortType: SortType) =
         currencyDao.getSortedCurrencyList(sortType.type).map { it.toCurrency() }
 
-    suspend fun changeFavoriteProperty(currencyItem: CurrencyItem) = withContext(Dispatchers.IO) {
+    suspend fun changeFavoriteProperty(currency: Currency) = withContext(Dispatchers.IO) {
         try {
-            val currencyEntity =
-                currencyItem.copy(isFavorite = currencyItem.isFavorite.not()).toCurrencyEntity()
-
+            val currencyEntity = currency.copy(favorite = !currency.favorite).toCurrencyEntity()
             currencyDao.updateCurrency(currencyEntity)
         } catch (e: Exception) {}
     }

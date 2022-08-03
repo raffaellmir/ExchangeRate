@@ -9,7 +9,7 @@ interface CurrencyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCurrencyList(currencyList: List<CurrencyEntity>)
 
-    @Query("DELETE FROM currency WHERE symbol IN(:currencyList) AND isFavorite = 0")
+    @Query("DELETE FROM currency WHERE symbol IN(:currencyList) AND favorite = 0")
     suspend fun deleteCurrencies(currencyList: List<String>)
 
     @Update
