@@ -5,6 +5,7 @@ import com.raffaellmir.exchangerate.data.local.CurrencyEntity
 import com.raffaellmir.exchangerate.data.remote.api.CurrencyService
 import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.*
+import com.raffaellmir.exchangerate.util.SortType.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -25,7 +26,7 @@ class CurrencyRepository @Inject constructor(
         try {
             val response = currencyService.getAllCurrencyBasedOn(base = base)
 
-            currencyDao.deleteCurrencies(response.body()!!.rates.map { it.key })
+            currencyDao.deleteCurrencyList(response.body()!!.rates.map { it.key })
             currencyDao.insertCurrencyList(response.body()!!.rates.map {
                 CurrencyEntity(symbol = it.key, value = it.value,
                     favorite = currencyDao.getCurrencyBySymbol(it.key)?.favorite ?: false) })
@@ -43,6 +44,11 @@ class CurrencyRepository @Inject constructor(
 
     suspend fun getSortedCurrencyList(sortType: SortType) =
         currencyDao.getSortedCurrencyList(sortType.type).map { it.toCurrency() }
+
+    suspend fun getFavoriteCurrencyList(sortType: SortType?) =
+        currencyDao
+            .getFavoriteCurrencyList(sortType?.type ?: DEFAUT.type)
+            .map { it.toCurrency() }
 
     suspend fun changeFavoriteProperty(currency: Currency) = withContext(Dispatchers.IO) {
         try {

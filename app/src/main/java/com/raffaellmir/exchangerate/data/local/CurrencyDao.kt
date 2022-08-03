@@ -10,7 +10,7 @@ interface CurrencyDao {
     suspend fun insertCurrencyList(currencyList: List<CurrencyEntity>)
 
     @Query("DELETE FROM currency WHERE symbol IN(:currencyList) AND favorite = 0")
-    suspend fun deleteCurrencies(currencyList: List<String>)
+    suspend fun deleteCurrencyList(currencyList: List<String>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCurrency(currencyEntity: CurrencyEntity)
@@ -27,4 +27,11 @@ interface CurrencyDao {
            "CASE WHEN :sortType = 2 THEN value END ASC, " +
            "CASE WHEN :sortType = 3 THEN value END DESC ")
     suspend fun getSortedCurrencyList(sortType: Int): List<CurrencyEntity>
+
+    @Query("SELECT * FROM currency WHERE favorite = 1 ORDER BY " +
+            "CASE WHEN :sortType = 0 THEN symbol END ASC, " +
+            "CASE WHEN :sortType = 1 THEN symbol END DESC, " +
+            "CASE WHEN :sortType = 2 THEN value END ASC, " +
+            "CASE WHEN :sortType = 3 THEN value END DESC ")
+    suspend fun getFavoriteCurrencyList(sortType: Int): List<CurrencyEntity>
 }
