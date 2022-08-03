@@ -11,6 +11,7 @@ import com.raffaellmir.exchangerate.R
 import com.raffaellmir.exchangerate.databinding.FragmentPopularBinding
 import com.raffaellmir.exchangerate.presentation.MainViewModel
 import com.raffaellmir.exchangerate.presentation.helpers.BaseFragment
+import com.raffaellmir.exchangerate.util.SortType.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -81,10 +82,10 @@ class PopularFragment : BaseFragment() {
 
         popup.setOnMenuItemClickListener { menuItem: MenuItem ->
             return@setOnMenuItemClickListener when (menuItem.itemId) {
-                R.id.option_sort_a_to_z -> viewModel.getAllSortedByName(asc = true)
-                R.id.option_sort_z_to_a -> viewModel.getAllSortedByName(asc = false)
-                R.id.option_sort_1_to_9 -> viewModel.getAllSortedByValue(asc = true)
-                R.id.option_sort_9_to_1 -> viewModel.getAllSortedByValue(asc = false)
+                R.id.option_sort_a_to_z -> viewModel.getSortedCurrencyList(NAME_ASC)
+                R.id.option_sort_z_to_a -> viewModel.getSortedCurrencyList(NAME_DESC)
+                R.id.option_sort_1_to_9 -> viewModel.getSortedCurrencyList(VALUE_ASC)
+                R.id.option_sort_9_to_1 -> viewModel.getSortedCurrencyList(VALUE_DESC)
                 else -> false
             }
         }

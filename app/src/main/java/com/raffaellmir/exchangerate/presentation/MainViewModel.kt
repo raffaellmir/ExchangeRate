@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.raffaellmir.exchangerate.data.repository.CurrencyRepository
 import com.raffaellmir.exchangerate.domain.model.CurrencyItem
 import com.raffaellmir.exchangerate.domain.model.PopularInfoState
-import com.raffaellmir.exchangerate.util.toCurrency
+import com.raffaellmir.exchangerate.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,48 +20,25 @@ class MainViewModel @Inject constructor(
     private val _popState = MutableStateFlow(PopularInfoState())
     val popState = _popState.asStateFlow()
 
-    init {
-        loadCurrencyList()
-    }
+    init { loadCurrencyList() }
 
-    private fun loadCurrencyList() {
+    private fun loadCurrencyList() =
         viewModelScope.launch {
             repository.loadAllCurrencyBasedOn("USD").collect {
                 _popState.value = _popState.value.copy(currencyList = it.data ?: emptyList())
             }
         }
-    }
 
-    private fun getCurrencyList() {
+    fun getSortedCurrencyList(sortType: SortType): Boolean {
         viewModelScope.launch {
-            repository.getAllCurrency().collect { it ->
-                _popState.value = _popState.value.copy(currencyList = it.map { it.toCurrency() })
-            }
-        }
-    }
-
-    fun getAllSortedByName(asc: Boolean): Boolean {
-        viewModelScope.launch {
-            repository.getAllSortedByName(asc).collect { it ->
-                _popState.value = _popState.value.copy(currencyList = it.map { it.toCurrency() })
-            }
+            val currencyList = repository.getSortedCurrencyList(sortType)
+            _popState.value = _popState.value.copy(currencyList = currencyList)
         }
         return true
     }
 
-    fun getAllSortedByValue(asc: Boolean): Boolean {
-        viewModelScope.launch {
-            repository.getAllSortedByValue(asc).collect { it ->
-                _popState.value = _popState.value.copy(currencyList = it.map { it.toCurrency() })
-            }
-        }
-        return true
-    }
-
-    fun onClickFavoriteButton(currencyItem: CurrencyItem) {
+    fun onClickFavoriteButton(currencyItem: CurrencyItem) =
         viewModelScope.launch {
             repository.changeFavoriteProperty(currencyItem = currencyItem)
-            //getCurrencyList()
         }
-    }
 }
