@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/option_sort_a_to_z"
+        android:icon="@drawable/ic_sort_a_to_z"
+        android:title="@string/sort_a_to_z" />
+    <item android:id="@+id/option_sort_z_to_a"
+        android:icon="@drawable/ic_sort_z_to_a"
+        android:title="@string/sort_z_to_a" />
+    <item android:id="@+id/option_sort_1_to_9"
+        android:icon="@drawable/ic_sort_1_to_9"
+        android:title="@string/sort_1_to_9" />
+    <item android:id="@+id/option_sort_9_to_1"
+        android:icon="@drawable/ic_sort_9_to_1"
+        android:title="@string/sort_9_to_1" />
+</menu>

@@ -2,5 +2,12 @@
     <string name="app_name">ExchangeRate</string>
     <string name="title_popular_fragment">Popular</string>
     <string name="title_favorite_fragment">Favorite</string>
+
+    <string name="sort_list">Sort list</string>
+    <string name="sort_a_to_z">Sort A to Z</string>
+    <string name="sort_z_to_a">Sort Z to A</string>
+    <string name="sort_1_to_9">Sort 1 to 9</string>
+    <string name="sort_9_to_1">Sort 9 to 1</string>
+
     <string name="todo">TODO</string>
 </resources>
