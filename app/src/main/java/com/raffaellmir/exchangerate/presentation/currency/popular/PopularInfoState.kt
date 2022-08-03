@@ -1,5 +1,6 @@
-package com.raffaellmir.exchangerate.domain.model
+package com.raffaellmir.exchangerate.presentation.currency.popular
 
+import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.SortType
 import com.raffaellmir.exchangerate.util.SortType.NAME_ASC
 

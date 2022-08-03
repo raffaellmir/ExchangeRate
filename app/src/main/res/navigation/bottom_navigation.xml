@@ -6,12 +6,12 @@
     app:startDestination="@id/popular_fragment">
     <fragment
         android:id="@+id/popular_fragment"
-        android:name="com.raffaellmir.exchangerate.presentation.popular.PopularFragment"
+        android:name="com.raffaellmir.exchangerate.presentation.currency.popular.PopularFragment"
         android:label="fragment_popular"
         tools:layout="@layout/fragment_popular" />
     <fragment
         android:id="@+id/favorite_fragment"
-        android:name="com.raffaellmir.exchangerate.presentation.favorite.FavoriteFragment"
+        android:name="com.raffaellmir.exchangerate.presentation.currency.favorite.FavoriteFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" />
 </navigation>

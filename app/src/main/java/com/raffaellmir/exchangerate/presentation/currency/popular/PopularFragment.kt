@@ -20,7 +20,7 @@ class PopularFragment : BaseFragment() {
     private var _binding: FragmentPopularBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
     private var currencyAdapter: CurrencyAdapter? = null
 
     override fun onCreateView(
@@ -50,7 +50,7 @@ class PopularFragment : BaseFragment() {
 
     private fun configureObservers() {
         launchFlow {
-            viewModel.popState.collect {
+            mainViewModel.popularState.collect {
                 currencyAdapter?.submitList(it.currencyList)
             }
         }
@@ -63,19 +63,14 @@ class PopularFragment : BaseFragment() {
     }
 
     private fun setupCurrencyAdapter() = with(binding.rvPopularCurrency) {
+        //todo обзервить изменения списка
+        mainViewModel.getSortedCurrencyList(DEFAUT)
+
         setHasFixedSize(true)
-        currencyAdapter = CurrencyAdapter { viewModel.onClickFavoriteButton(it) }
+        currencyAdapter = CurrencyAdapter { mainViewModel.onClickFavoriteButton(it) }
         layoutManager = LinearLayoutManager(requireContext(), VERTICAL, false)
         adapter = currencyAdapter
     }
-
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        val popup = PopupMenu(requireContext(), v)
-        val inflater: MenuInflater = popup.menuInflater
-        inflater.inflate(R.menu.sort_menu, menu)
-    }
-
 
     private fun showMenu(v: View, @MenuRes menuRes: Int) {
         val popup = PopupMenu(requireContext(), v)
@@ -83,10 +78,10 @@ class PopularFragment : BaseFragment() {
 
         popup.setOnMenuItemClickListener { menuItem: MenuItem ->
             return@setOnMenuItemClickListener when (menuItem.itemId) {
-                R.id.option_sort_a_to_z -> viewModel.getSortedCurrencyList(NAME_ASC)
-                R.id.option_sort_z_to_a -> viewModel.getSortedCurrencyList(NAME_DESC)
-                R.id.option_sort_1_to_9 -> viewModel.getSortedCurrencyList(VALUE_ASC)
-                R.id.option_sort_9_to_1 -> viewModel.getSortedCurrencyList(VALUE_DESC)
+                R.id.option_sort_a_to_z -> mainViewModel.getSortedCurrencyList(NAME_ASC)
+                R.id.option_sort_z_to_a -> mainViewModel.getSortedCurrencyList(NAME_DESC)
+                R.id.option_sort_1_to_9 -> mainViewModel.getSortedCurrencyList(VALUE_ASC)
+                R.id.option_sort_9_to_1 -> mainViewModel.getSortedCurrencyList(VALUE_DESC)
                 else -> false
             }
         }

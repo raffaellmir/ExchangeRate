@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raffaellmir.exchangerate.data.repository.CurrencyRepository
 import com.raffaellmir.exchangerate.domain.model.Currency
-import com.raffaellmir.exchangerate.domain.model.PopularInfoState
+import com.raffaellmir.exchangerate.presentation.currency.popular.PopularInfoState
 import com.raffaellmir.exchangerate.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,10 +18,11 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _popState = MutableStateFlow(PopularInfoState())
-    val popState = _popState.asStateFlow()
+    val popularState = _popState.asStateFlow()
 
     init { loadCurrencyList() }
 
+    //main
     private fun loadCurrencyList() =
         viewModelScope.launch {
             repository.loadAllCurrencyBasedOn("USD").collect {
@@ -29,6 +30,7 @@ class MainViewModel @Inject constructor(
             }
         }
 
+    //popular
     fun getSortedCurrencyList(sortType: SortType): Boolean {
         viewModelScope.launch {
             val currencyList = repository.getSortedCurrencyList(sortType)
@@ -37,6 +39,7 @@ class MainViewModel @Inject constructor(
         return true
     }
 
+    //main
     fun onClickFavoriteButton(currency: Currency) {
         viewModelScope.launch {
             repository.changeFavoriteProperty(currency = currency)
