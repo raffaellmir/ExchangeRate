@@ -1,23 +1,30 @@
 package com.raffaellmir.exchangerate.data.local
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CurrencyDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCurrencyList(currencyList: List<CurrencyEntity>)
 
-    @Query("DELETE FROM currency WHERE symbol IN(:currencyList)")
+    @Query("DELETE FROM currency WHERE symbol IN(:currencyList) AND isFavorite = 0")
     suspend fun deleteCurrencies(currencyList: List<String>)
 
-    @Query("SELECT * FROM currency")
+    @Update
+    suspend fun updateCurrency(currencyEntity: CurrencyEntity)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateCurrencyList(currencyList: List<CurrencyEntity>)
+
+    @Query("SELECT * FROM currency ORDER BY symbol ASC")
     fun getAllCurrencyFlow(): Flow<List<CurrencyEntity>>
 
-    @Query("SELECT * FROM currency")
-    fun getAllCurrency(): List<CurrencyEntity>
+    @Query("SELECT * FROM currency ORDER BY symbol ASC")
+    suspend fun getAllCurrency(): List<CurrencyEntity>
+
+    @Query("SELECT * FROM currency WHERE symbol = :symbol")
+    suspend fun getCurrencyBySymbol(symbol: String): CurrencyEntity?
 
     @Query("SELECT * FROM currency ORDER BY " +
             "CASE WHEN :isAsc = 0 THEN symbol END DESC, " +
