@@ -53,6 +53,7 @@ class PopularFragment : BaseFragment() {
     }
 
     private fun setupCurrencyAdapter() = with(binding.rvPopularCurrency) {
+        setHasFixedSize(true)
         currencyAdapter = PopularCurrencyAdapter { viewModel.onClickFavoriteButton(it) }
         layoutManager = LinearLayoutManager(requireContext(), VERTICAL, false)
         adapter = currencyAdapter

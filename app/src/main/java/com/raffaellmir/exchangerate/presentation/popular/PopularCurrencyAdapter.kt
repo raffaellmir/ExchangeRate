@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.raffaellmir.exchangerate.databinding.CurrencyItemBinding
 import com.raffaellmir.exchangerate.domain.model.CurrencyItem
 
-class PopularCurrencyAdapter :
+class PopularCurrencyAdapter(private val onFavoriteButtonClick: (CurrencyItem) -> Unit) :
     ListAdapter<CurrencyItem, PopularCurrencyAdapter.CurrencyHolder>(ItemDiffCallback) {
 
     inner class CurrencyHolder(
@@ -17,7 +17,9 @@ class PopularCurrencyAdapter :
         fun bind(currency: CurrencyItem) = with(binding) {
             tvCurrencyTitle.text = currency.symbol
             tvCurrencyValue.text = currency.value.toString()
+
             cbIsFavorite.isChecked = currency.isFavorite
+            cbIsFavorite.setOnClickListener { onFavoriteButtonClick(currency) }
         }
     }
 
@@ -25,9 +27,8 @@ class PopularCurrencyAdapter :
         CurrencyHolder(CurrencyItemBinding
             .inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: CurrencyHolder, position: Int) {
+    override fun onBindViewHolder(holder: CurrencyHolder, position: Int) =
         holder.bind(getItem(position))
-    }
 
     private companion object {
         object ItemDiffCallback : DiffUtil.ItemCallback<CurrencyItem>() {
