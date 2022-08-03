@@ -1,12 +1,13 @@
 package com.raffaellmir.exchangerate.presentation.popular
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.PopupMenu
+import androidx.annotation.MenuRes
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
+import com.raffaellmir.exchangerate.R
 import com.raffaellmir.exchangerate.databinding.FragmentPopularBinding
 import com.raffaellmir.exchangerate.presentation.MainViewModel
 import com.raffaellmir.exchangerate.presentation.helpers.BaseFragment
@@ -31,7 +32,8 @@ class PopularFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         configureViews()
-        initObservers()
+        configureListeners()
+        configureObservers()
     }
 
     override fun onDestroyView() {
@@ -44,11 +46,17 @@ class PopularFragment : BaseFragment() {
         setupCurrencyAdapter()
     }
 
-    private fun initObservers() {
+    private fun configureObservers() {
         launchFlow {
             viewModel.popState.collect {
                 currencyAdapter?.submitList(it.currencyList)
             }
+        }
+    }
+
+    private fun configureListeners() {
+        binding.fabSort.setOnClickListener { v: View ->
+            showMenu(v, R.menu.sort_menu)
         }
     }
 
@@ -57,5 +65,29 @@ class PopularFragment : BaseFragment() {
         currencyAdapter = PopularCurrencyAdapter { viewModel.onClickFavoriteButton(it) }
         layoutManager = LinearLayoutManager(requireContext(), VERTICAL, false)
         adapter = currencyAdapter
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val popup = PopupMenu(requireContext(), v)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.sort_menu, menu)
+    }
+
+
+    private fun showMenu(v: View, @MenuRes menuRes: Int) {
+        val popup = PopupMenu(requireContext(), v)
+        popup.menuInflater.inflate(menuRes, popup.menu)
+
+        popup.setOnMenuItemClickListener { menuItem: MenuItem ->
+            return@setOnMenuItemClickListener when (menuItem.itemId) {
+                R.id.option_sort_a_to_z -> viewModel.getAllSortedByName(asc = true)
+                R.id.option_sort_z_to_a -> viewModel.getAllSortedByName(asc = false)
+                R.id.option_sort_1_to_9 -> viewModel.getAllSortedByValue(asc = true)
+                R.id.option_sort_9_to_1 -> viewModel.getAllSortedByValue(asc = false)
+                else -> false
+            }
+        }
+        popup.show()
     }
 }

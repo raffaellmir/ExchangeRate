@@ -40,10 +40,28 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun getAllSortedByName(asc: Boolean): Boolean {
+        viewModelScope.launch {
+            repository.getAllSortedByName(asc).collect { it ->
+                _popState.value = _popState.value.copy(currencyList = it.map { it.toCurrency() })
+            }
+        }
+        return true
+    }
+
+    fun getAllSortedByValue(asc: Boolean): Boolean {
+        viewModelScope.launch {
+            repository.getAllSortedByValue(asc).collect { it ->
+                _popState.value = _popState.value.copy(currencyList = it.map { it.toCurrency() })
+            }
+        }
+        return true
+    }
+
     fun onClickFavoriteButton(currencyItem: CurrencyItem) {
         viewModelScope.launch {
             repository.changeFavoriteProperty(currencyItem = currencyItem)
-            getCurrencyList()
+            //getCurrencyList()
         }
     }
 }

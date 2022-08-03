@@ -8,3 +8,5 @@ fun CurrencyEntity.toCurrency() =
 
 fun CurrencyItem.toCurrencyEntity() =
     CurrencyEntity(symbol = this.symbol, value = this.value, isFavorite = this.isFavorite)
+
+fun Boolean.toInt() = if (this) 1 else 0

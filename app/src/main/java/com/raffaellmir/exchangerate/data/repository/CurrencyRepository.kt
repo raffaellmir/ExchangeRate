@@ -7,6 +7,7 @@ import com.raffaellmir.exchangerate.domain.model.CurrencyItem
 import com.raffaellmir.exchangerate.util.Event
 import com.raffaellmir.exchangerate.util.toCurrency
 import com.raffaellmir.exchangerate.util.toCurrencyEntity
+import com.raffaellmir.exchangerate.util.toInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -45,6 +46,10 @@ class CurrencyRepository @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
     fun getAllCurrency() = currencyDao.getAllCurrencyFlow()
+
+    fun getAllSortedByName(asc: Boolean) = currencyDao.getAllSortedByName(asc.toInt())
+
+    fun getAllSortedByValue(asc: Boolean) = currencyDao.getAllSortedByValue(asc.toInt())
 
     suspend fun changeFavoriteProperty(currencyItem: CurrencyItem) = withContext(Dispatchers.IO) {
         try {

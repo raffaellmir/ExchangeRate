@@ -27,12 +27,12 @@ interface CurrencyDao {
     suspend fun getCurrencyBySymbol(symbol: String): CurrencyEntity?
 
     @Query("SELECT * FROM currency ORDER BY " +
-            "CASE WHEN :isAsc = 0 THEN symbol END DESC, " +
-            "CASE WHEN :isAsc = 1 THEN symbol END ASC ")
-    fun getAllSortedByName(isAsc : Int): Flow<List<CurrencyEntity>>
+            "CASE WHEN :asc = 0 THEN symbol END DESC, " +
+            "CASE WHEN :asc = 1 THEN symbol END ASC ")
+    fun getAllSortedByName(asc : Int): Flow<List<CurrencyEntity>>
 
     @Query("SELECT * FROM currency ORDER BY " +
-            "CASE WHEN :isAsc = 0 THEN value END DESC, " +
-            "CASE WHEN :isAsc = 1 THEN value END ASC ")
-    fun getAllSortedByValue(isAsc : Int): Flow<List<CurrencyEntity>>
+            "CASE WHEN :asc = 0 THEN value END DESC, " +
+            "CASE WHEN :asc = 1 THEN value END ASC ")
+    fun getAllSortedByValue(asc : Int): Flow<List<CurrencyEntity>>
 }
