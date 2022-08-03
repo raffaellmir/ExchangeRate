@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d046c49c5483d1f09f59391a8d130085",
+    "identityHash": "07ecee5bf92fb81b2de03a3c4b5d0487",
     "entities": [
       {
         "tableName": "currency",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `value` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, PRIMARY KEY(`symbol`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`symbol` TEXT NOT NULL, `value` REAL NOT NULL, `favorite` INTEGER NOT NULL, PRIMARY KEY(`symbol`))",
         "fields": [
           {
             "fieldPath": "symbol",
@@ -21,8 +21,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "isFavorite",
-            "columnName": "isFavorite",
+            "fieldPath": "favorite",
+            "columnName": "favorite",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -40,7 +40,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd046c49c5483d1f09f59391a8d130085')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '07ecee5bf92fb81b2de03a3c4b5d0487')"
     ]
   }
 }

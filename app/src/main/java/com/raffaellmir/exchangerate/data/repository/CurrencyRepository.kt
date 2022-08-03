@@ -41,8 +41,6 @@ class CurrencyRepository @Inject constructor(
         emit(Event.Success(newCurrencyList))
     }.flowOn(Dispatchers.IO)
 
-    fun getAllCurrency() = currencyDao.getAllCurrencyFlow()
-
     suspend fun getSortedCurrencyList(sortType: SortType) =
         currencyDao.getSortedCurrencyList(sortType.type).map { it.toCurrency() }
 

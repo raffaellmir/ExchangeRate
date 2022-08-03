@@ -12,11 +12,8 @@ interface CurrencyDao {
     @Query("DELETE FROM currency WHERE symbol IN(:currencyList) AND favorite = 0")
     suspend fun deleteCurrencies(currencyList: List<String>)
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCurrency(currencyEntity: CurrencyEntity)
-
-    @Query("SELECT * FROM currency ORDER BY symbol ASC")
-    fun getAllCurrencyFlow(): Flow<List<CurrencyEntity>>
 
     @Query("SELECT * FROM currency ORDER BY symbol ASC")
     suspend fun getAllCurrency(): List<CurrencyEntity>

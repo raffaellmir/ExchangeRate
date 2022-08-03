@@ -37,8 +37,17 @@ class MainViewModel @Inject constructor(
         return true
     }
 
-    fun onClickFavoriteButton(currency: Currency) =
+    fun onClickFavoriteButton(currency: Currency) {
         viewModelScope.launch {
             repository.changeFavoriteProperty(currency = currency)
         }
+        val listWithReplacedItem = _popState.value.currencyList.map {
+            if (it.symbol == currency.symbol)
+                Currency(symbol = it.symbol, value = it.value, favorite = !it.favorite)
+            else it
+        }
+        _popState.value = _popState.value.copy(currencyList = listWithReplacedItem)
+        //getSortedCurrencyList(_popState.value.sortType)
+    }
+
 }
