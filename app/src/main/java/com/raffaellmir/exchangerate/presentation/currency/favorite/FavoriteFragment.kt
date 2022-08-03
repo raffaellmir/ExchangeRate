@@ -1,4 +1,4 @@
-package com.raffaellmir.exchangerate.presentation.favorite
+package com.raffaellmir.exchangerate.presentation.currency.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater

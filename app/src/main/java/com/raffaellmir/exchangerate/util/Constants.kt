@@ -1,4 +1,4 @@
-package com.raffaellmir.exchangerate
+package com.raffaellmir.exchangerate.util
 
 object Constants {
     const val CURRENCY_URL = "https://api.apilayer.com/"

@@ -1,4 +1,4 @@
-package com.raffaellmir.exchangerate.presentation.popular
+package com.raffaellmir.exchangerate.presentation.currency.popular
 
 import android.os.Bundle
 import android.view.*
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.raffaellmir.exchangerate.R
 import com.raffaellmir.exchangerate.databinding.FragmentPopularBinding
+import com.raffaellmir.exchangerate.presentation.currency.CurrencyAdapter
 import com.raffaellmir.exchangerate.presentation.MainViewModel
 import com.raffaellmir.exchangerate.presentation.helpers.BaseFragment
 import com.raffaellmir.exchangerate.util.SortType.*
@@ -20,7 +21,7 @@ class PopularFragment : BaseFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: MainViewModel by viewModels()
-    private var currencyAdapter: PopularCurrencyAdapter? = null
+    private var currencyAdapter: CurrencyAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -63,7 +64,7 @@ class PopularFragment : BaseFragment() {
 
     private fun setupCurrencyAdapter() = with(binding.rvPopularCurrency) {
         setHasFixedSize(true)
-        currencyAdapter = PopularCurrencyAdapter { viewModel.onClickFavoriteButton(it) }
+        currencyAdapter = CurrencyAdapter { viewModel.onClickFavoriteButton(it) }
         layoutManager = LinearLayoutManager(requireContext(), VERTICAL, false)
         adapter = currencyAdapter
     }

@@ -1,4 +1,4 @@
-package com.raffaellmir.exchangerate.presentation.popular
+package com.raffaellmir.exchangerate.presentation.currency
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.raffaellmir.exchangerate.databinding.CurrencyItemBinding
 import com.raffaellmir.exchangerate.domain.model.Currency
 
-class PopularCurrencyAdapter(private val onFavoriteButtonClick: (Currency) -> Unit) :
-    ListAdapter<Currency, PopularCurrencyAdapter.CurrencyHolder>(ItemDiffCallback) {
+class CurrencyAdapter(private val onFavoriteButtonClick: (Currency) -> Unit) :
+    ListAdapter<Currency, CurrencyAdapter.CurrencyHolder>(ItemDiffCallback) {
 
     inner class CurrencyHolder(
         private val binding: CurrencyItemBinding
