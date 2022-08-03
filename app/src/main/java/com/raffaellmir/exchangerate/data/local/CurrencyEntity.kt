@@ -11,6 +11,3 @@ data class CurrencyEntity(
     val value: Double,
     val isFavorite: Boolean
 )
-
-fun CurrencyEntity.toCurrency() =
-    CurrencyItem(symbol = this.symbol, value = this.value, isFavorite = this.isFavorite)
