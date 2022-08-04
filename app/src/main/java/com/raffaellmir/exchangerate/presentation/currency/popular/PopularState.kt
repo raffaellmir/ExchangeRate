@@ -4,8 +4,7 @@ import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.SortType
 import com.raffaellmir.exchangerate.util.SortType.NAME_ASC
 
-data class PopularInfoState (
+data class PopularState (
     val baseCurrency: String = "USD",
-    val currencyList: List<Currency> = emptyList(),
-    val sortType: SortType = NAME_ASC
+    val sortType: SortType = NAME_ASC,
 )

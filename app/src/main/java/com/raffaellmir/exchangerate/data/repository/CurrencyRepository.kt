@@ -7,6 +7,7 @@ import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.Event
 import com.raffaellmir.exchangerate.util.SortType
 import com.raffaellmir.exchangerate.util.SortType.Companion.getDefaultSortType
+import com.raffaellmir.exchangerate.util.SortType.NAME_ASC
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -18,10 +19,10 @@ class CurrencyRepository @Inject constructor(
     private val currencyService: CurrencyService,
     private val currencyDao: CurrencyDao,
 ) {
-    suspend fun loadAllCurrencyBasedOn(base: String) = flow {
+    fun loadAllCurrencyBasedOn(base: String) = flow {
         emit(Event.Loading())
 
-        val currencyList = currencyDao.getAllCurrency().map { it.toCurrency() }
+        val currencyList = currencyDao.getCurrencyList(getDefaultSortType().type).map { it.toCurrency() }
         emit(Event.Loading(currencyList))
 
         try {
@@ -41,13 +42,13 @@ class CurrencyRepository @Inject constructor(
             )
         }
 
-        val newCurrencyList = currencyDao.getAllCurrency().map { it.toCurrency() }
+        val newCurrencyList = currencyDao.getCurrencyList(getDefaultSortType().type).map { it.toCurrency() }
         emit(Event.Success(newCurrencyList))
     }.flowOn(Dispatchers.IO)
 
-    suspend fun getPopularCurrencyList(sortType: SortType?) =
+    suspend fun getCurrencyList(sortType: SortType?) =
         currencyDao
-            .getPopularCurrencyList(sortType = sortType?.type ?: getDefaultSortType().type)
+            .getCurrencyList(sortType = sortType?.type ?: getDefaultSortType().type)
             .map { it.toCurrency() }
 
     suspend fun getFavoriteCurrencyList(sortType: SortType?) =

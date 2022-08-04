@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.annotation.MenuRes
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +15,9 @@ import com.raffaellmir.exchangerate.R
 import com.raffaellmir.exchangerate.databinding.FragmentCurrencyListBinding
 import com.raffaellmir.exchangerate.presentation.CurrencyViewModel
 import com.raffaellmir.exchangerate.presentation.helpers.BaseFragment
-import com.raffaellmir.exchangerate.util.SortType
+import com.raffaellmir.exchangerate.util.CurrencyListType.FAVORITE
+import com.raffaellmir.exchangerate.util.CurrencyListType.POPULAR
+import com.raffaellmir.exchangerate.util.SortType.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +25,7 @@ class CurrencyListFragment : BaseFragment() {
     private var _binding: FragmentCurrencyListBinding? = null
     private val binding get() = _binding!!
 
-    private val currencyViewModel: CurrencyViewModel by viewModels()
+    private val currencyViewModel: CurrencyViewModel by activityViewModels()
     private val args: CurrencyListFragmentArgs by navArgs()
     private var currencyAdapter: CurrencyAdapter? = null
 
@@ -55,8 +57,11 @@ class CurrencyListFragment : BaseFragment() {
 
     private fun observeOnState() {
         launchFlow {
-            currencyViewModel.popularState.collect {
-                currencyAdapter?.submitList(it.currencyList)
+            currencyViewModel.currencyListState.collect {
+                when (args.type) {
+                    POPULAR -> currencyAdapter?.submitList(it.currencyList)
+                    FAVORITE -> currencyAdapter?.submitList(it.favoriteCurrencyListTest)
+                }
             }
         }
     }
@@ -73,10 +78,10 @@ class CurrencyListFragment : BaseFragment() {
 
         popup.setOnMenuItemClickListener { menuItem: MenuItem ->
             return@setOnMenuItemClickListener when (menuItem.itemId) {
-                R.id.option_sort_a_to_z -> currencyViewModel.getPopularCurrencyList(SortType.NAME_ASC)
-                R.id.option_sort_z_to_a -> currencyViewModel.getPopularCurrencyList(SortType.NAME_DESC)
-                R.id.option_sort_1_to_9 -> currencyViewModel.getPopularCurrencyList(SortType.VALUE_ASC)
-                R.id.option_sort_9_to_1 -> currencyViewModel.getPopularCurrencyList(SortType.VALUE_DESC)
+                R.id.option_sort_a_to_z -> currencyViewModel.onSortMenuItemClick(NAME_ASC, args.type)
+                R.id.option_sort_z_to_a -> currencyViewModel.onSortMenuItemClick(NAME_DESC, args.type)
+                R.id.option_sort_1_to_9 -> currencyViewModel.onSortMenuItemClick(VALUE_ASC, args.type)
+                R.id.option_sort_9_to_1 -> currencyViewModel.onSortMenuItemClick(VALUE_DESC, args.type)
                 else -> false
             }
         }

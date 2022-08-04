@@ -15,9 +15,6 @@ interface CurrencyDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCurrency(currencyEntity: CurrencyEntity)
 
-    @Query("SELECT * FROM currency ORDER BY symbol ASC")
-    suspend fun getAllCurrency(): List<CurrencyEntity>
-
     @Query("SELECT * FROM currency WHERE symbol = :symbol")
     suspend fun getCurrencyBySymbol(symbol: String): CurrencyEntity?
 
@@ -26,7 +23,7 @@ interface CurrencyDao {
            "CASE WHEN :sortType = 1 THEN symbol END DESC, " +
            "CASE WHEN :sortType = 2 THEN value END ASC, " +
            "CASE WHEN :sortType = 3 THEN value END DESC ")
-    suspend fun getPopularCurrencyList(sortType: Int): List<CurrencyEntity>
+    suspend fun getCurrencyList(sortType: Int): List<CurrencyEntity>
 
     @Query("SELECT * FROM currency WHERE favorite = 1 ORDER BY " +
             "CASE WHEN :sortType = 0 THEN symbol END ASC, " +
