@@ -23,7 +23,6 @@ class FavoriteFragment : BaseFragment() {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    private val mainViewModel: MainViewModel by viewModels()
     private val favoriteViewModel: FavoriteViewModel by viewModels()
     private var currencyAdapter: CurrencyAdapter? = null
 
@@ -39,9 +38,9 @@ class FavoriteFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        configureViews()
-        configureListeners()
-        configureObservers()
+        setupCurrencyList()
+        setListeners()
+        observeOnState()
     }
 
     override fun onDestroyView() {
@@ -50,17 +49,13 @@ class FavoriteFragment : BaseFragment() {
         _binding = null
     }
 
-    private fun configureViews() {
-        setupCurrencyAdapter()
-    }
-
-    private fun configureListeners() {
+    private fun setListeners() {
         binding.fabSort.setOnClickListener { v: View ->
             showMenu(v, R.menu.sort_menu)
         }
     }
 
-    private fun configureObservers() {
+    private fun observeOnState() {
         launchFlow {
             favoriteViewModel.favoriteState.collect {
                 currencyAdapter?.submitList(it.currencyList)
@@ -68,7 +63,7 @@ class FavoriteFragment : BaseFragment() {
         }
     }
 
-    private fun setupCurrencyAdapter() = with(binding.rvFavoriteCurrency) {
+    private fun setupCurrencyList() = with(binding.rvFavoriteCurrency) {
         //todo обзервить изменения списка
         favoriteViewModel.getCurrencyList(favoriteViewModel.favoriteState.value.sortType)
 

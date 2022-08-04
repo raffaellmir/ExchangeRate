@@ -24,6 +24,7 @@
         android:clickable="true"
         android:contentDescription="@string/sort_list"
         android:text="@string/sort_list"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         android:tooltipText="Sort list"
         app:icon="@drawable/ic_sort" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -26,7 +26,7 @@ interface CurrencyDao {
            "CASE WHEN :sortType = 1 THEN symbol END DESC, " +
            "CASE WHEN :sortType = 2 THEN value END ASC, " +
            "CASE WHEN :sortType = 3 THEN value END DESC ")
-    suspend fun getSortedCurrencyList(sortType: Int): List<CurrencyEntity>
+    suspend fun getPopularCurrencyList(sortType: Int): List<CurrencyEntity>
 
     @Query("SELECT * FROM currency WHERE favorite = 1 ORDER BY " +
             "CASE WHEN :sortType = 0 THEN symbol END ASC, " +

@@ -6,6 +6,7 @@ import com.raffaellmir.exchangerate.data.repository.CurrencyRepository
 import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.presentation.currency.popular.PopularInfoState
 import com.raffaellmir.exchangerate.util.SortType
+import com.raffaellmir.exchangerate.util.SortType.Companion.getDefaultSortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +23,6 @@ class MainViewModel @Inject constructor(
 
     init { loadCurrencyList() }
 
-    //main
     private fun loadCurrencyList() =
         viewModelScope.launch {
             repository.loadAllCurrencyBasedOn("USD").collect {
@@ -30,27 +30,23 @@ class MainViewModel @Inject constructor(
             }
         }
 
-    //popular
-    //todo getCurrencyList SortType?
-    fun getSortedCurrencyList(sortType: SortType): Boolean {
+    fun getPopularCurrencyList(sortType: SortType? = null): Boolean {
         viewModelScope.launch {
-            val currencyList = repository.getSortedCurrencyList(sortType)
-            _popState.value = _popState.value.copy(currencyList = currencyList, sortType = sortType)
+            val currencyList = repository.getPopularCurrencyList(sortType)
+            _popState.value = _popState.value.copy(currencyList = currencyList, sortType = sortType ?: getDefaultSortType())
         }
         return true
     }
 
-    //main
     fun onClickFavoriteButton(currency: Currency) {
         viewModelScope.launch {
             repository.changeFavoriteProperty(currency = currency)
         }
         val listWithReplacedItem = _popState.value.currencyList.map {
-            if (it.symbol == currency.symbol)
-                Currency(symbol = it.symbol, value = it.value, favorite = !it.favorite)
+            if (it.symbol == currency.symbol) Currency(symbol = it.symbol, value = it.value, favorite = !it.favorite)
             else it
         }
-        val copy = _popState.value.copy(currencyList = listWithReplacedItem)
-        _popState.value = copy
+
+        _popState.value = _popState.value.copy(currencyList = listWithReplacedItem)
     }
 }

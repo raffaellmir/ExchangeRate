@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.raffaellmir.exchangerate.data.repository.CurrencyRepository
 import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.SortType
-import com.raffaellmir.exchangerate.util.SortType.DEFAUT
+import com.raffaellmir.exchangerate.util.SortType.Companion.getDefaultSortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,8 +27,7 @@ class FavoriteViewModel @Inject constructor(
     fun getCurrencyList(sortType: SortType? = null): Boolean {
         viewModelScope.launch {
             val currencyList = repository.getFavoriteCurrencyList(sortType)
-            _favState.value =
-                _favState.value.copy(currencyList = currencyList, sortType = sortType ?: DEFAUT)
+            _favState.value = _favState.value.copy(currencyList = currencyList, sortType = sortType ?: getDefaultSortType())
         }
         return true
     }
@@ -38,11 +37,10 @@ class FavoriteViewModel @Inject constructor(
             repository.changeFavoriteProperty(currency = currency)
         }
         val listWithReplacedItem = _favState.value.currencyList.map {
-            if (it.symbol == currency.symbol)
-                Currency(symbol = it.symbol, value = it.value, favorite = !it.favorite)
+            if (it.symbol == currency.symbol) Currency(symbol = it.symbol, value = it.value, favorite = !it.favorite)
             else it
         }
-        val copy = _favState.value.copy(currencyList = listWithReplacedItem)
-        _favState.value = copy
+
+        _favState.value = _favState.value.copy(currencyList = listWithReplacedItem)
     }
 }

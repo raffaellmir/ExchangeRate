@@ -32,10 +32,8 @@ class CurrencyAdapter(private val onFavoriteButtonClick: (Currency) -> Unit) :
 
     private companion object {
         object ItemDiffCallback : DiffUtil.ItemCallback<Currency>() {
-            override fun areItemsTheSame(oldItem: Currency, newItem: Currency): Boolean =
-                oldItem.symbol == newItem.symbol
-            override fun areContentsTheSame(oldItem: Currency, newItem: Currency): Boolean =
-                oldItem == newItem
+            override fun areItemsTheSame(oldItem: Currency, newItem: Currency): Boolean = oldItem.symbol == newItem.symbol
+            override fun areContentsTheSame(oldItem: Currency, newItem: Currency): Boolean = oldItem == newItem
         }
     }
 }
