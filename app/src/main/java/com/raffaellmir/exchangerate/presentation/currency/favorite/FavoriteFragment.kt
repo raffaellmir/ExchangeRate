@@ -9,7 +9,7 @@ import android.widget.PopupMenu
 import androidx.annotation.MenuRes
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.*
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.raffaellmir.exchangerate.R
 import com.raffaellmir.exchangerate.databinding.FragmentFavoriteBinding
 import com.raffaellmir.exchangerate.presentation.MainViewModel
@@ -70,10 +70,10 @@ class FavoriteFragment : BaseFragment() {
 
     private fun setupCurrencyAdapter() = with(binding.rvFavoriteCurrency) {
         //todo обзервить изменения списка
-        favoriteViewModel.getCurrencyList()
+        favoriteViewModel.getCurrencyList(favoriteViewModel.favoriteState.value.sortType)
 
         setHasFixedSize(true)
-        currencyAdapter = CurrencyAdapter { mainViewModel.onClickFavoriteButton(it) }
+        currencyAdapter = CurrencyAdapter { favoriteViewModel.onClickFavoriteButton(it) }
         layoutManager = LinearLayoutManager(requireContext(), VERTICAL, false)
         adapter = currencyAdapter
     }

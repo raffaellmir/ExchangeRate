@@ -31,6 +31,7 @@ class MainViewModel @Inject constructor(
         }
 
     //popular
+    //todo getCurrencyList SortType?
     fun getSortedCurrencyList(sortType: SortType): Boolean {
         viewModelScope.launch {
             val currencyList = repository.getSortedCurrencyList(sortType)
@@ -49,8 +50,7 @@ class MainViewModel @Inject constructor(
                 Currency(symbol = it.symbol, value = it.value, favorite = !it.favorite)
             else it
         }
-        _popState.value = _popState.value.copy(currencyList = listWithReplacedItem)
-        //getSortedCurrencyList(_popState.value.sortType)
+        val copy = _popState.value.copy(currencyList = listWithReplacedItem)
+        _popState.value = copy
     }
-
 }

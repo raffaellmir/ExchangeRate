@@ -64,7 +64,7 @@ class PopularFragment : BaseFragment() {
 
     private fun setupCurrencyAdapter() = with(binding.rvPopularCurrency) {
         //todo обзервить изменения списка
-        mainViewModel.getSortedCurrencyList(DEFAUT)
+        mainViewModel.getSortedCurrencyList(mainViewModel.popularState.value.sortType)
 
         setHasFixedSize(true)
         currencyAdapter = CurrencyAdapter { mainViewModel.onClickFavoriteButton(it) }

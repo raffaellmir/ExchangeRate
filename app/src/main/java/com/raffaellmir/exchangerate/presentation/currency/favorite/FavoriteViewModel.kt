@@ -3,6 +3,7 @@ package com.raffaellmir.exchangerate.presentation.currency.favorite
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raffaellmir.exchangerate.data.repository.CurrencyRepository
+import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.SortType
 import com.raffaellmir.exchangerate.util.SortType.DEFAUT
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,5 +31,18 @@ class FavoriteViewModel @Inject constructor(
                 _favState.value.copy(currencyList = currencyList, sortType = sortType ?: DEFAUT)
         }
         return true
+    }
+
+    fun onClickFavoriteButton(currency: Currency) {
+        viewModelScope.launch {
+            repository.changeFavoriteProperty(currency = currency)
+        }
+        val listWithReplacedItem = _favState.value.currencyList.map {
+            if (it.symbol == currency.symbol)
+                Currency(symbol = it.symbol, value = it.value, favorite = !it.favorite)
+            else it
+        }
+        val copy = _favState.value.copy(currencyList = listWithReplacedItem)
+        _favState.value = copy
     }
 }
