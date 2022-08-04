@@ -13,12 +13,6 @@
         android:paddingHorizontal="32dp"
         tool:text="RUB" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/cbIsFavorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="32dp" />
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvCurrencyValue"
         android:layout_width="128dp"
@@ -27,4 +21,10 @@
         android:paddingEnd="32dp"
         tool:ignore="RtlSymmetry"
         tool:text="62.1324" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/cbIsFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="32dp" />
 </LinearLayout>
