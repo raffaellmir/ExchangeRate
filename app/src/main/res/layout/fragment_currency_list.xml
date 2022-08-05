@@ -18,8 +18,10 @@
         app:placeholderText="USD">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/select_base_currency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="true"
             android:ellipsize="end"
             android:maxLength="4"
             android:singleLine="true" />
