@@ -9,5 +9,7 @@
     <string name="sort_1_to_9">Sort 1 to 9</string>
     <string name="sort_9_to_1">Sort 9 to 1</string>
 
+    <string name="base_currency">Base currency</string>
+
     <string name="todo">TODO</string>
 </resources>
