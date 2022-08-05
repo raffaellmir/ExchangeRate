@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.raffaellmir.exchangerate.R
 import com.raffaellmir.exchangerate.databinding.FragmentCurrencyListBinding
-import com.raffaellmir.exchangerate.presentation.CurrencyViewModel
 import com.raffaellmir.exchangerate.presentation.helpers.BaseFragment
 import com.raffaellmir.exchangerate.util.CurrencyListType.FAVORITE
 import com.raffaellmir.exchangerate.util.CurrencyListType.POPULAR
@@ -56,14 +55,18 @@ class CurrencyListFragment : BaseFragment() {
     }
 
     private fun observeOnState() {
-        launchFlow {
-            currencyViewModel.currencyListState.collect {
-                when (args.type) {
-                    POPULAR -> currencyAdapter?.submitList(it.currencyList)
-                    FAVORITE -> currencyAdapter?.submitList(it.favoriteCurrencyListTest)
-                }
+        if (args.type == POPULAR) {
+            launchFlow {
+                currencyViewModel.popularState.collect { currencyAdapter?.submitList(it.currencyList) }
             }
         }
+
+        if (args.type == FAVORITE) {
+            launchFlow {
+                currencyViewModel.favoriteState.collect { currencyAdapter?.submitList(it.favoriteCurrencyList) }
+            }
+        }
+
     }
 
     private fun setListeners() {

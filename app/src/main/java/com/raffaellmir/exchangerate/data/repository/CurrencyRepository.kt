@@ -7,7 +7,6 @@ import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.Event
 import com.raffaellmir.exchangerate.util.SortType
 import com.raffaellmir.exchangerate.util.SortType.Companion.getDefaultSortType
-import com.raffaellmir.exchangerate.util.SortType.NAME_ASC
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -31,7 +30,9 @@ class CurrencyRepository @Inject constructor(
             currencyDao.deleteCurrencyList(response.rates.map { it.key })
             currencyDao.insertCurrencyList(response.rates.map {
                 CurrencyEntity(
-                    symbol = it.key, value = it.value, favorite = currencyDao.getCurrencyBySymbol(it.key)?.favorite ?: false) })
+                    symbol = it.key, value = it.value,
+                    favorite = currencyDao.getCurrencyBySymbol(it.key)?.favorite ?: false)
+            })
 
         } catch (e: IOException) {
             emit(
@@ -60,7 +61,6 @@ class CurrencyRepository @Inject constructor(
         try {
             val currencyEntity = currency.copy(favorite = !currency.favorite).toCurrencyEntity()
             currencyDao.updateCurrency(currencyEntity)
-        } catch (e: Exception) {
-        }
+        } catch (e: Exception) { }
     }
 }

@@ -7,4 +7,5 @@ import com.raffaellmir.exchangerate.util.SortType.NAME_ASC
 data class PopularState (
     val baseCurrency: String = "USD",
     val sortType: SortType = NAME_ASC,
+    val currencyList: List<Currency> = emptyList(),
 )

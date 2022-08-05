@@ -6,5 +6,6 @@ import com.raffaellmir.exchangerate.util.SortType.*
 
 data class FavoriteState(
     val baseCurrency: String = "USD",
-    val sortType: SortType = NAME_ASC
+    val sortType: SortType = NAME_ASC,
+    var favoriteCurrencyList: List<Currency> = emptyList()
 )
