@@ -60,14 +60,13 @@ class CurrencyViewModel @Inject constructor(
     fun onClickFavoriteButton(currency: Currency) {
         viewModelScope.launch {
             repository.changeFavoriteProperty(currency = currency)
-        }
-        val listWithReplacedItem = _popularState.value.currencyList.map {
-            if (it.symbol == currency.symbol) Currency(symbol = it.symbol, value = it.value, favorite = !it.favorite)
-            else it
-        }
 
-        _popularState.value = _popularState.value.copy(currencyList = listWithReplacedItem)
-        _favoriteState.value = _favoriteState.value.copy(favoriteCurrencyList = listWithReplacedItem.filter { it.favorite })
+            val currencyList = repository.getCurrencyList(_popularState.value.sortType)
+            _popularState.value = _popularState.value.copy(currencyList = currencyList)
+
+            val favoriteCurrencyList = repository.getFavoriteCurrencyList(_favoriteState.value.sortType)
+            _favoriteState.value = _favoriteState.value.copy(favoriteCurrencyList = favoriteCurrencyList)
+        }
     }
 
     fun onSortMenuItemClick(sortType: SortType, currencyListType: CurrencyListType): Boolean {
