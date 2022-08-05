@@ -9,6 +9,7 @@ import com.raffaellmir.exchangerate.util.CurrencyListType.FAVORITE
 import com.raffaellmir.exchangerate.util.CurrencyListType.POPULAR
 import com.raffaellmir.exchangerate.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -22,21 +23,28 @@ class CurrencyViewModel @Inject constructor(
     private val _currencyState = MutableStateFlow(CurrencyState())
     val currencyState = _currencyState.asStateFlow()
 
+    private val _baseCurrencyList = MutableStateFlow<List<String>>(emptyList())
+    val baseCurrencyList = _baseCurrencyList.asStateFlow()
+
     init {
         loadCurrencyList()
     }
+//  TODO: исправить отображение списка избранных валют
+    private fun loadCurrencyList(currencyListType: CurrencyListType? = null): Job {
+        val base = _currencyState.value.baseCurrency
 
-    private fun loadCurrencyList(currencyListType: CurrencyListType? = null) =
-        viewModelScope.launch {
-            repository.loadAllCurrencyBasedOn("USD").collect { result ->
+        return viewModelScope.launch {
+            repository.loadAllCurrencyBasedOn(base).collect { result ->
                 when (currencyListType) {
                     POPULAR, null ->
                         _currencyState.value = _currencyState.value.copy(currencyList = result.data ?: emptyList())
                     FAVORITE ->
                         _currencyState.value = _currencyState.value.copy(currencyList = result.data!!.filter { it.favorite })
                 }
+                _baseCurrencyList.value = result.data?.map { it.symbol } ?: emptyList()
             }
         }
+    }
 
     private fun getCurrencyList() {
         val sortType = _currencyState.value.sortType
@@ -56,14 +64,14 @@ class CurrencyViewModel @Inject constructor(
         }
     }
 
-    fun onClickFavoriteButton(currency: Currency) {
+    fun onFavoriteChange(currency: Currency) {
         viewModelScope.launch {
             repository.changeFavoriteProperty(currency = currency)
             getCurrencyList()
         }
     }
 
-    fun onSortMenuItemClick(sortType: SortType): Boolean {
+    fun onSortChange(sortType: SortType): Boolean {
         _currencyState.value = _currencyState.value.copy(sortType = sortType)
         getCurrencyList()
         return true
@@ -72,5 +80,10 @@ class CurrencyViewModel @Inject constructor(
     fun onListChange(currencyListType: CurrencyListType) {
         _currencyState.value = _currencyState.value.copy(currencyListType = currencyListType)
         getCurrencyList()
+    }
+
+    fun onBaseCurrencyChange(baseCurrencySymbol: String) {
+        _currencyState.value = _currencyState.value.copy(baseCurrency = baseCurrencySymbol)
+        loadCurrencyList()
     }
 }

@@ -7,6 +7,7 @@
     tools:context=".presentation.currency.CurrencyListFragment">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilBaseCurrencyList"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="128dp"
         android:layout_height="64dp"
@@ -18,13 +19,13 @@
         app:placeholderText="USD">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
-            android:id="@+id/select_base_currency"
+            android:id="@+id/baseCurrencyList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAllCaps="true"
-            android:ellipsize="end"
+            android:maxLines="7"
+            android:inputType="textShortMessage"
             android:maxLength="4"
-            android:singleLine="true" />
+            android:textAllCaps="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
