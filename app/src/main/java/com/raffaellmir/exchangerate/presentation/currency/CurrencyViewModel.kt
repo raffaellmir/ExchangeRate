@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raffaellmir.exchangerate.data.repository.CurrencyRepository
 import com.raffaellmir.exchangerate.domain.model.Currency
-import com.raffaellmir.exchangerate.presentation.currency.favorite.FavoriteState
-import com.raffaellmir.exchangerate.presentation.currency.popular.PopularState
 import com.raffaellmir.exchangerate.util.CurrencyListType
 import com.raffaellmir.exchangerate.util.CurrencyListType.FAVORITE
 import com.raffaellmir.exchangerate.util.CurrencyListType.POPULAR
@@ -21,65 +19,58 @@ class CurrencyViewModel @Inject constructor(
     private val repository: CurrencyRepository,
 ) : ViewModel() {
 
-    private val _popularState = MutableStateFlow(PopularState())
-    val popularState = _popularState.asStateFlow()
-
-    private val _favoriteState = MutableStateFlow(FavoriteState())
-    val favoriteState = _favoriteState.asStateFlow()
+    private val _currencyState = MutableStateFlow(CurrencyState())
+    val currencyState = _currencyState.asStateFlow()
 
     init {
         loadCurrencyList()
     }
 
-    private fun loadCurrencyList() =
+    private fun loadCurrencyList(currencyListType: CurrencyListType? = null) =
         viewModelScope.launch {
             repository.loadAllCurrencyBasedOn("USD").collect { result ->
-                _popularState.value =
-                    _popularState.value.copy(currencyList = result.data ?: emptyList())
-                _favoriteState.value =
-                    _favoriteState.value.copy(favoriteCurrencyList = result.data?.filter { it.favorite } ?: emptyList())
+                when (currencyListType) {
+                    POPULAR, null ->
+                        _currencyState.value = _currencyState.value.copy(currencyList = result.data ?: emptyList())
+                    FAVORITE ->
+                        _currencyState.value = _currencyState.value.copy(currencyList = result.data!!.filter { it.favorite })
+                }
             }
         }
 
-    private fun getCurrencyList(sortType: SortType? = null) {
+    private fun getCurrencyList() {
+        val sortType = _currencyState.value.sortType
+        val currencyListType = _currencyState.value.currencyListType
+
         viewModelScope.launch {
-            val currencyList = repository.getCurrencyList(sortType)
-
-            _popularState.value = _popularState.value.copy(currencyList = currencyList)
-        }
-    }
-
-    private fun getFavoriteCurrencyList(sortType: SortType? = null) {
-        viewModelScope.launch {
-            val currencyList = repository.getFavoriteCurrencyList(sortType)
-
-            _favoriteState.value = _favoriteState.value.copy(favoriteCurrencyList = currencyList)
+            when (currencyListType) {
+                POPULAR -> {
+                    val currencyList = repository.getCurrencyList(sortType)
+                    _currencyState.value = _currencyState.value.copy(currencyList = currencyList)
+                }
+                FAVORITE -> {
+                    val currencyList = repository.getFavoriteCurrencyList(sortType)
+                    _currencyState.value = _currencyState.value.copy(currencyList = currencyList)
+                }
+            }
         }
     }
 
     fun onClickFavoriteButton(currency: Currency) {
         viewModelScope.launch {
             repository.changeFavoriteProperty(currency = currency)
-
-            val currencyList = repository.getCurrencyList(_popularState.value.sortType)
-            _popularState.value = _popularState.value.copy(currencyList = currencyList)
-
-            val favoriteCurrencyList = repository.getFavoriteCurrencyList(_favoriteState.value.sortType)
-            _favoriteState.value = _favoriteState.value.copy(favoriteCurrencyList = favoriteCurrencyList)
+            getCurrencyList()
         }
     }
 
-    fun onSortMenuItemClick(sortType: SortType, currencyListType: CurrencyListType): Boolean {
-        when (currencyListType) {
-            POPULAR -> {
-                _popularState.value = _popularState.value.copy(sortType = sortType)
-                getCurrencyList(sortType)
-            }
-            FAVORITE -> {
-                _favoriteState.value = _favoriteState.value.copy(sortType = sortType)
-                getFavoriteCurrencyList(sortType)
-            }
-        }
+    fun onSortMenuItemClick(sortType: SortType): Boolean {
+        _currencyState.value = _currencyState.value.copy(sortType = sortType)
+        getCurrencyList()
         return true
+    }
+
+    fun onListChange(currencyListType: CurrencyListType) {
+        _currencyState.value = _currencyState.value.copy(currencyListType = currencyListType)
+        getCurrencyList()
     }
 }

@@ -11,8 +11,9 @@
         tools:layout="@layout/fragment_currency_list">
         <argument
             android:name="type"
-            app:argType="com.raffaellmir.exchangerate.util.CurrencyListType"
-            android:defaultValue="POPULAR" /></fragment>
+            android:defaultValue="POPULAR"
+            app:argType="com.raffaellmir.exchangerate.util.CurrencyListType" />
+    </fragment>
 
     <fragment
         android:id="@+id/favorite_fragment"
@@ -21,6 +22,7 @@
         tools:layout="@layout/fragment_currency_list">
         <argument
             android:name="type"
-            app:argType="com.raffaellmir.exchangerate.util.CurrencyListType"
-            android:defaultValue="FAVORITE" /></fragment>
+            android:defaultValue="FAVORITE"
+            app:argType="com.raffaellmir.exchangerate.util.CurrencyListType" />
+    </fragment>
 </navigation>
