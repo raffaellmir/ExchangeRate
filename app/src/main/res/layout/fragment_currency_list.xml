@@ -22,9 +22,8 @@
             android:id="@+id/baseCurrencyList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="7"
-            android:inputType="textShortMessage"
-            android:maxLength="4"
+            android:inputType="textShortMessage|textNoSuggestions"
+            android:maxLength="3"
             android:textAllCaps="true" />
     </com.google.android.material.textfield.TextInputLayout>
 

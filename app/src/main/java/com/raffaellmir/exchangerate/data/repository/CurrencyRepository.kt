@@ -1,5 +1,8 @@
 package com.raffaellmir.exchangerate.data.repository
 
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.raffaellmir.exchangerate.data.local.CurrencyDao
 import com.raffaellmir.exchangerate.data.local.CurrencyEntity
 import com.raffaellmir.exchangerate.data.remote.api.CurrencyService
@@ -7,6 +10,7 @@ import com.raffaellmir.exchangerate.domain.model.Currency
 import com.raffaellmir.exchangerate.util.Event
 import com.raffaellmir.exchangerate.util.SortType
 import com.raffaellmir.exchangerate.util.SortType.Companion.getDefaultSortType
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -17,17 +21,18 @@ import javax.inject.Singleton
 
 @Singleton
 class CurrencyRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val currencyService: CurrencyService,
     private val currencyDao: CurrencyDao,
 ) {
-    fun loadAllCurrencyBasedOn(base: String) = flow {
+    fun loadCurrencyList() = flow {
         emit(Event.Loading())
 
         val currencyList = currencyDao.getCurrencyList(getDefaultSortType().type).map { it.toCurrency() }
         emit(Event.Loading(currencyList))
 
         try {
-            val response = currencyService.getCurrencyBasedOn(base = base)
+            val response = currencyService.getCurrencyBasedOn(base = getBaseCurrency())
 
             currencyDao.deleteCurrencyList(response.rates.map { it.key })
             currencyDao.insertCurrencyList(response.rates.map {
@@ -66,5 +71,14 @@ class CurrencyRepository @Inject constructor(
         } catch (e: Exception) { }
     }
 
+    private val baseCurrencyData: SharedPreferences = context.getSharedPreferences("BASE_CURRENCY", Context.MODE_PRIVATE)
 
+    fun getBaseCurrency() = baseCurrencyData.getString(BASE_CURRENCY_KEY, DEFAULT_CURRENCY) ?: DEFAULT_CURRENCY
+
+    fun changeBaseCurrency(currency: String) { baseCurrencyData.edit { putString(BASE_CURRENCY_KEY, currency) } }
+
+    companion object {
+        const val DEFAULT_CURRENCY = "USD"
+        const val BASE_CURRENCY_KEY = "BASE_CURRENCY"
+    }
 }

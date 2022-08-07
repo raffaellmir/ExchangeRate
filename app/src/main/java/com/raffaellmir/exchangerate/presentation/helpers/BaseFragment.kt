@@ -8,19 +8,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 abstract class BaseFragment : Fragment() {
-
-    fun launchFlow(action: suspend () -> Unit) {
+    fun <T> collectFlow(flow: Flow<T>, onCollect: (T) -> Unit) {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                action()
-            }
-        }
-    }
-
-    fun <T> Flow<T>.launchWhenStarted() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                collect{}
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                flow.collect {
+                    onCollect(it)
+                }
             }
         }
     }

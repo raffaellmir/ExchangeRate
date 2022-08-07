@@ -21,7 +21,6 @@ import com.raffaellmir.exchangerate.databinding.FragmentCurrencyListBinding
 import com.raffaellmir.exchangerate.presentation.helpers.BaseFragment
 import com.raffaellmir.exchangerate.util.SortType.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class CurrencyListFragment : BaseFragment() {
@@ -61,23 +60,13 @@ class CurrencyListFragment : BaseFragment() {
     }
 
     private fun observeOnState() {
-        launchFlow {
-            currencyViewModel.currencyState.collect { state ->
-                currencyAdapter?.submitList(state.currencyList)
-            }
+        collectFlow(currencyViewModel.currencyState) { state ->
+            currencyAdapter?.submitList(state.currencyList)
+            binding.baseCurrencyList.setText(state.baseCurrency)
         }
 
-        launchFlow {
-            currencyViewModel.baseCurrencyList.collect { list ->
-                setupBaseCurrencyList(list)
-            }
-        }
-
-        launchFlow {
-            currencyViewModel.baseCurrency.collect{ symbol ->
-                binding.baseCurrencyList.setText(symbol)
-                currencyViewModel.onBaseCurrencyChange(symbol)
-            }
+        collectFlow(currencyViewModel.baseCurrencyList) { list ->
+            setupBaseCurrencyList(list)
         }
     }
 
