@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CurrencyRepository @Inject constructor(
     private val currencyService: CurrencyService,
     private val currencyDao: CurrencyDao,
@@ -63,4 +65,6 @@ class CurrencyRepository @Inject constructor(
             currencyDao.updateCurrency(currencyEntity)
         } catch (e: Exception) { }
     }
+
+
 }

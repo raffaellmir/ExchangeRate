@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.NOT_FOCUSABLE
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
@@ -20,6 +21,7 @@ import com.raffaellmir.exchangerate.databinding.FragmentCurrencyListBinding
 import com.raffaellmir.exchangerate.presentation.helpers.BaseFragment
 import com.raffaellmir.exchangerate.util.SortType.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class CurrencyListFragment : BaseFragment() {
@@ -70,6 +72,13 @@ class CurrencyListFragment : BaseFragment() {
                 setupBaseCurrencyList(list)
             }
         }
+
+        launchFlow {
+            currencyViewModel.baseCurrency.collect{ symbol ->
+                binding.baseCurrencyList.setText(symbol)
+                currencyViewModel.onBaseCurrencyChange(symbol)
+            }
+        }
     }
 
     private fun setListeners() = with(binding) {
@@ -77,11 +86,10 @@ class CurrencyListFragment : BaseFragment() {
             showMenu(v, R.menu.sort_menu)
         }
 
-        baseCurrencyList.onItemClickListener = OnItemClickListener { parent, view, position, id ->
-//            TODO: настроить отображение списка при изменении базовой валюты
-//            val symbol = parent.getItemAtPosition(position).toString()
-//            baseCurrencyList.focusable = NOT_FOCUSABLE
-//            currencyViewModel.onBaseCurrencyChange(symbol)
+        baseCurrencyList.onItemClickListener = OnItemClickListener { parent, _, position, _ ->
+            val symbol = parent.getItemAtPosition(position).toString()
+            baseCurrencyList.focusable = NOT_FOCUSABLE
+            currencyViewModel.onBaseCurrencyChange(symbol)
         }
     }
 
