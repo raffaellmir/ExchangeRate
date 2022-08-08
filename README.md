@@ -17,6 +17,3 @@ Applications for viewing the exchange rate, designed using the components of the
 - [Material Design 3](https://m3.material.io/) - The latest version of Material Design includes personalization and accessibility features that put people at the center.
 - [Retrofit & OkHttp](https://github.com/square/retrofit) - Construct the REST APIs and paging network data.
 - [ViewBindingPropertyDelegate](https://github.com/androidbroadcast/ViewBindingPropertyDelegate) - Make work with Android View Binding simpler.
-
-## Screenshots
-![](screenshots/1.jpg) ![](screenshots/2.jpg)   
